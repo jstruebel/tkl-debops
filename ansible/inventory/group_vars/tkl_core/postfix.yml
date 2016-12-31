@@ -1,0 +1,39 @@
+---
+# Changes to default DebOps postfix role for Turnkey Linux configuration
+
+postfix: [ 'local' ]
+
+postfix_smtpd_banner: '$myhostname ESMTP $mail_name (Debian/GNU)'
+
+postfix_delay_warning_time: '0h'
+
+postfix_long_queue_ids: 'no'
+
+postfix_message_size_limit: 9.765625
+
+postfix_disable_vrfy_command: 'no'
+
+postfix_strict_rfc821_envelopes: 'no'
+
+postfix_smtpd_helo_required: 'no'
+
+postfix_smtpd_reject_unlisted_sender: 'no'
+
+postfix_dependencies: False
+
+postfix_local_mastercf: |
+  maildrop  unix  -       n       n       -       -       pipe
+    flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}
+  ifmail    unix  -       n       n       -       -       pipe
+    flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
+  bsmtp     unix  -       n       n       -       -       pipe
+    flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient
+  scalemail-backend unix	-	n	n	-	2	pipe
+    flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}
+  mailman   unix  -       n       n       -       -       pipe
+    flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
+    ${nexthop} ${user}
+
+postfix_local_maincf: |
+  readme_directory = no
+

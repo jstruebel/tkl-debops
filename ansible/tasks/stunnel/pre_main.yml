@@ -1,0 +1,7 @@
+---
+
+- name: Stop stunnel
+  service:
+    name: 'stunnel4'
+    state: 'stopped'
+

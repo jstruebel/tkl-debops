@@ -1,0 +1,35 @@
+# Inventory file to map TurnKey Linux host groups to DebOps groups
+
+# Define TKL groups here to prevent error if they aren't defined in
+#   user's hosts file
+[tkl_core]
+
+[tkl_fileserver]
+
+[tkl_mediaserver]
+
+[tkl_openldap]
+
+[tkl_core:children]
+tkl_fileserver
+tkl_mediaserver
+tkl_openldap
+
+[debops_service_bootstrap:children]
+tkl_core
+
+[debops_all_hosts:children]
+tkl_core
+
+[debops_service_postfix:children]
+tkl_core
+
+[debops_service_stunnel:children]
+tkl_core
+
+[debops_service_samba:children]
+tkl_fileserver
+tkl_mediaserver
+
+[debops_service_slapd:children]
+tkl_openldap

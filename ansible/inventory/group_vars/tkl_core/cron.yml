@@ -1,0 +1,5 @@
+---
+# Changes to default DebOps cron role for Turnkey Linux configuration
+
+cron__packages:
+  - 'cron-apt'

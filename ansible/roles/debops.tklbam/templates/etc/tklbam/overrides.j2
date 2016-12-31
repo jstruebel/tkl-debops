@@ -1,0 +1,18 @@
+{%  set tklbam__tpl_overrides = [] %}
+{% if tklbam__overrides|d() or
+      tklbam__group_overrides|d() or
+      tklbam__host_overrides|d() %}
+{%  set tklbam__tpl_overrides = (tklbam__overrides +
+                                 tklbam__group_overrides +
+                                 tklbam__host_overrides) | unique %}
+{% endif %}
+# {{ ansible_managed }}
+
+###########################
+# TKLBAM BACKUP OVERRIDES #
+###########################
+
+{% for override in tklbam__tpl_overrides %}
+{{ override }}
+
+{% endfor %}

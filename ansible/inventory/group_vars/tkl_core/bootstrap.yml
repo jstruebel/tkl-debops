@@ -1,0 +1,4 @@
+---
+# Changes to default DebOps bootstrap role for Turnkey Linux configuration
+
+bootstrap__admin_groups: [ 'admins' ]

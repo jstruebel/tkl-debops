@@ -1,0 +1,4 @@
+---
+
+# Disable FERM configuration to preserve default Turnkey Setup
+ferm__enabled: False

@@ -1,0 +1,10 @@
+---
+
+- name: Ensure kernel.printk is disable for containers
+  lineinfile:
+    dest: /etc/sysctl.conf
+    regexp: '^kernel\.printk(.*)'
+    line: '#kernel.printk\1'
+    backrefs: yes
+  when: ansible_virtualization_role|d() and "guest" in ansible_virtualization_role and ansible_virtualization_type|d() and ansible_virtualization_type in ["lxc","openvz"]
+

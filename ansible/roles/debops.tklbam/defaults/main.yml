@@ -1,0 +1,15 @@
+---
+
+tklbam__enabled: False
+
+tklbam__packages: 
+  - 'tklbam'
+  - 'tklbam-squid'
+  - 'tklbam-duplicity'
+  - 'tklbam-python-boto'
+
+tklbam__overrides: []
+
+tklbam__group_overrides: []
+
+tklbam__host_overrides: []

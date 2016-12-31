@@ -1,0 +1,4 @@
+---
+
+# Disable TCPwrappers to preserve Turnkey Linux config
+tcpwrappers__enabled: False

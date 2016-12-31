@@ -1,0 +1,13 @@
+---
+# Changes to default DebOps ntp role for Turnkey Linux configuration
+
+ntp__daemon: '{{ (ansible_local.ntp.daemon
+                  if (ansible_local|d() and ansible_local.ntp|d() and
+                      ansible_local.ntp.daemon|d())
+                  else "ntpd") }}'
+
+ntp__ignore_ntpdate: True
+
+ntp__servers: '{{ ntp__servers_map["default"] }}'
+
+ntp__fudge: False

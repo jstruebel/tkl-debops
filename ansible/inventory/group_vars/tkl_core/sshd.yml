@@ -1,0 +1,64 @@
+---
+# Changes to default DebOps sshd role for Turnkey Linux configuration
+
+sshd__recommended_packages: []
+
+sshd__optional_packages: []
+
+sshd__host_keys: [ 'rsa', 'dsa', 'ecdsa', 'ed25519' ]
+
+sshd__permit_root_login: 'yes'
+
+sshd__password_authentication: 'yes'
+
+sshd__x11_forwarding: 'yes'
+
+sshd__max_auth_tries: '6'
+
+sshd__max_startups: '10:30:100'
+
+sshd__login_grace_time: '120'
+
+sshd__privilege_separation: 'yes'
+
+sshd__allow_groups: []
+
+sshd__authorized_keys_system: []
+
+sshd__authorized_keys_user:
+  - '.ssh/authorized_keys'
+  - '.ssh/authorized_keys2'
+
+sshd__ciphers_map: {}
+
+sshd__kex_algorithms_map: {}
+
+sshd__macs_map: {}
+
+sshd__moduli_minimum: '1022'
+
+sshd__ldap_filter: '{{ sshd__ldap_filter_map["uid"] }}'
+
+sshd__ldap_filter_map:
+
+  # User account by uid attribute only
+  'uid': '(&(objectClass=posixAccount)(uid=$username))'
+
+  # User account needs 'authorizedService' attribute
+  'service': '(&(objectClass=posixAccount)(uid=$username)(authorizedService=$service))'
+
+  # User account needs 'host' attribute
+  'host': '(&(objectClass=posixAccount)(uid=$username)(|(host=$hostname)(host=$fqdn)(host=\\*.$domain)(host=\\*)))'
+
+  # User account needs both 'authorizedService' and 'host' attributes.
+  'service+host': '(&(objectClass=posixAccount)(uid=$username)(authorizedService=$service)(|(host=$hostname)(host=$fqdn)(host=\\*.$domain)(host=\\*)))'
+
+sshd__match_list:
+  - match: 'user root'
+    options: |
+      Banner /root/.ssh/banner
+  - match: 'user *'
+    options: ''
+
+sshd__custom_options: |
+  UseDNS no

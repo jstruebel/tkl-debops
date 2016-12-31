@@ -1,0 +1,23 @@
+---
+
+- name: Ensure HubDNS is installed
+  apt:
+    name: '{{ item }}'
+    state: present
+    install_recommends: False
+  with_items: '{{ hubdns__packages }}'
+  when: hubdns__enabled|bool
+
+- name: Initialize HubDNS
+  command: "/usr/bin/hubdns-init --force {{ tklhub__apikey }} {{ hubdns__domain }}"
+  ignore_errors: yes
+  when: hubdns__enabled|bool
+
+- name: Enable Hourly HubDNS Cron Job
+  file:
+    path: "/etc/cron.hourly/hubdns-update"
+    owner: root
+    group: root
+    mode: 0755
+    state: file
+  when: hubdns__enabled|bool

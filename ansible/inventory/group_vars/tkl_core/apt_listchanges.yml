@@ -1,0 +1,4 @@
+---
+# Changes to default DebOps apt_listchanges role for Turnkey Linux configuration
+
+apt_listchanges__deploy_state: 'absent'

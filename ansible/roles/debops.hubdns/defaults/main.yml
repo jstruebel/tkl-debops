@@ -1,0 +1,9 @@
+---
+
+hubdns__enabled: False
+
+hubdns__packages:
+  - 'hubdns'
+
+hubdns__domain: '{{ ansible_fqdn }}'
+

@@ -1,0 +1,11 @@
+---
+
+- name: Configure Turnkey Linux Repository
+  apt_repository:
+    repo: "deb http://archive.turnkeylinux.org/debian jessie main"
+    state: present
+
+- name: Configure Turnkey Linux Apt Key
+  apt_key:
+    url: "https://github.com/turnkeylinux/turnkey-keyring/raw/master/turnkey-release-keyring.gpg"
+

@@ -1,0 +1,19 @@
+---
+# Changes to default DebOps console role for Turnkey Linux configuration
+
+console_issue: '{{ ansible_lsb.description }}'
+
+console_fsckfix: 'no'
+
+console_root: False
+
+console_sysnews: False
+
+console_preferred_editors:
+  - '/usr/bin/vim.basic'
+  - '/usr/bin/emacs24'
+  - '/bin/nano'
+  - '/usr/bin/vim.tiny'
+  - '/bin/ed'
+
+console_proc_hidepid: False

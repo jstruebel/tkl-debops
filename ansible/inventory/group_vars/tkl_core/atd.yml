@@ -1,0 +1,4 @@
+---
+
+# Disable atd configuration to preserve default Turnkey Setup
+atd_enabled: False

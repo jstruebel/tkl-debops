@@ -1,0 +1,33 @@
+---
+# Changes to default DebOps apt_install role for Turnkey Linux configuration
+
+apt_install__packages:
+  - 'libpam-modules'
+
+apt_install__base_packages:
+  - 'lsb-release'
+  - 'make'
+  - 'sudo'
+  - 'git'
+  - 'curl'
+  - 'rsync'
+  - 'bsdutils'
+  - 'acl'
+
+apt_install__python_packages:
+  - 'python'
+  - 'python-apt'
+  - 'python-pip'
+  - 'python-pycurl'
+
+apt_install__shell_packages:
+  - 'ncurses-term'
+  - 'less'
+  - 'file'
+  - 'psmisc'
+
+apt_install__editor_packages:
+  - 'vim'
+  - 'nano'
+
+apt_install__conditional_whitelist_packages: []

@@ -1,0 +1,6 @@
+---
+
+tklhub__apikey_base: '{{ secret + "/credentials/tklhub/apikey" }}'
+
+tklhub__apikey: '{{ lookup("password", tklhub__apikey_base) }}'
+

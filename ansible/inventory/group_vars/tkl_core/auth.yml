@@ -1,0 +1,23 @@
+---
+# Changes to default DebOps auth role for Turnkey Linux configuration
+
+auth_system_groups:
+  - 'admins'
+
+auth_shadow_umask: '0022'
+
+auth_pwhistory_remember: ''
+
+auth_cracklib: False
+
+auth_ldap_conf: False
+
+auth_ldap_conf_tls_reqcert: 'allow'
+
+auth_nslcd_conf: False
+
+auth_nslcd_tls_reqcert: 'allow'
+
+auth_pam_mkhomedir_umask: '0022'
+
+auth_nslcd_pam_authz_search: []

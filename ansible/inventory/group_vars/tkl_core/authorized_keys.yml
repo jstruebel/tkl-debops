@@ -1,0 +1,4 @@
+---
+
+# Disable Authorized Keys configuration to preserve default Turnkey Setup
+authorized_keys__enabled: False

@@ -1,0 +1,18 @@
+---
+# Changes to default DebOps sysctl role for Turnkey Linux configuration
+
+sysctl__shared_memory_configure: '{{ False|bool
+                                     if (ansible_virtualization_role|d() and
+                                         "guest" in ansible_virtualization_role
+                                         and ansible_virtualization_type|d() and
+                                         ansible_virtualization_type in ["lxc","openvz"])
+                                     else True|bool }}'
+
+sysctl__paging_configure: '{{ False|bool
+                              if (ansible_virtualization_role|d() and
+                                  "guest" in ansible_virtualization_role
+                                  and ansible_virtualization_type|d() and
+                                  ansible_virtualization_type in ["lxc","openvz"])
+                              else True|bool }}'
+
+sysctl__hardening_enabled: False

@@ -1,0 +1,22 @@
+---
+- name: Manage Turnkey Linux Services
+  hosts: [ 'tkl_core' ]
+  gather_facts: True
+  become: True
+
+  roles:
+
+    - role: debops.tkl
+      tags: [ 'role::tkl' ]
+
+    - role: debops.tklhub
+      tags: [ 'role::tklhub' ]
+
+    - role: debops.secalerts
+      tags: [ 'role::secalerts' ]
+
+    - role: debops.tklbam
+      tags: [ 'role::tklbam' ]
+
+    - role: debops.hubdns
+      tags: [ 'role::hubdns' ]

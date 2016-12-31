@@ -1,0 +1,4 @@
+---
+
+# Disable Nullmailer configuration to preserve default Turnkey Setup
+nullmailer__enabled: False

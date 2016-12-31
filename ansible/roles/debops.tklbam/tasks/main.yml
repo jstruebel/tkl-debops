@@ -1,0 +1,37 @@
+---
+
+- name: Ensure TKLBAM is installed
+  apt:
+    name: '{{ item }}'
+    state: present
+    install_recommends: False
+  with_items: '{{ tklbam__packages }}'
+  when: tklbam__enabled|bool
+
+- name: Initialize TKLBAM
+  command: "/usr/bin/tklbam-init {{ tklhub__apikey }}"
+  args:
+    creates: "/var/lib/tklbam/credentials"
+  ignore_errors: yes
+  when: tklbam__enabled|bool
+
+- name: Enable Daily TKLBAM Cron Job
+  file:
+    path: "/etc/cron.daily/tklbam-backup"
+    owner: root
+    group: root
+    mode: 0755
+    state: file
+  when: tklbam__enabled|bool
+
+- name: Configure TKLBAM Overrides
+  template:
+    src: '{{ lookup("template_src", "etc/tklbam/overrides.j2") }}'
+    dest: '/etc/tklbam/overrides'
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+    create: yes
+    backup: yes
+  when: tklbam__enabled|bool

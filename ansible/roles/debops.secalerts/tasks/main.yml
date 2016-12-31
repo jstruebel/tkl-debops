@@ -1,0 +1,6 @@
+---
+
+- name: Initialize SecAlerts
+  command: "/usr/lib/inithooks/bin/secalerts.sh {{ tkl__admin_email }}"
+  when: secalerts__enabled|bool
+

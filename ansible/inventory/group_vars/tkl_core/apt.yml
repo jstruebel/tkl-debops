@@ -1,0 +1,14 @@
+---
+# Changes to default DebOps apt role for Turnkey Linux configuration
+
+apt__base_packages: [ 'python-apt', 'ca-certificates' ]
+
+apt__sources_deploy_state: 'absent'
+
+apt__keys:
+  - url: 'https://github.com/turnkeylinux/turnkey-keyring/raw/master/turnkey-release-keyring.gpg'
+  - state: present
+
+apt__repositories:
+  - repo: 'deb http://archive.turnkeylinux.org/debian jessie main'
+  - state: present

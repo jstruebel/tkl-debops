@@ -1,0 +1,73 @@
+---
+# Changes to default DebOps sysctl role for Turnkey Linux configuration
+
+rsyslog__pki: False
+
+rsyslog__capabilities: [ '!mark', 'xconsole' ]
+
+rsyslog__conf_system_rules:
+
+  - filename: '50-default.system'
+    sections:
+
+      - comment: 'Standard log files, split by facility'
+        options: |-
+          auth,authpriv.*                /var/log/auth.log
+          *.*;auth,authpriv.none         -/var/log/syslog
+          #cron.*                         -/var/log/cron.log
+          daemon.*                       -/var/log/daemon.log
+          kern.*                         -/var/log/kern.log
+          lpr.*                          -/var/log/lpr.log
+          mail.*                         -/var/log/mail.log
+          user.*                         -/var/log/user.log
+      - comment: 'Copy of the local log files to complete remote logs'
+        options: |-
+          auth,authpriv.*                ?RemoteHostAuthLog
+          auth,authpriv.*                ?RemoteServiceAuthLog
+          *.*;auth,authpriv.none         -?RemoteHostSyslog
+          #cron.*                         -?RemoteHostCronLog
+          cron.*                         -?RemoteServiceCronLog
+          mail.*                         -?RemoteServiceMailLog
+        state: '{{ "present"
+                   if ("remote-files" in rsyslog__capabilities)
+                   else "absent" }}'
+
+      - comment: |-
+          Logging for the mail system. Split it up so that
+          it is easy to write scripts to parse these files
+        options: |-
+          mail.info                      -/var/log/mail.info
+          mail.warn                      -/var/log/mail.warn
+          mail.err                       /var/log/mail.err
+      - comment: 'Logging for INN news system'
+        options: |-
+          news.crit                      /var/log/news/news.crit
+          news.err                       /var/log/news/news.err
+          news.notice                    -/var/log/news/news.notice
+        state: '{{ "absent"
+                  if ("!news" in rsyslog__capabilities)
+                  else "present" }}'
+
+      - comment: 'Some "catch-all" log files'
+        options: |-
+          *.=debug;\
+                  auth,authpriv.none;\
+                  mail.none,news.none     -/var/log/debug
+          *.=info;*.=notice;*.=warn;\
+                  auth,authpriv.none;\
+                  cron,daemon.none;\
+                  mail,news.none          -/var/log/messages
+      - comment: 'Emergencies are sent to everybody logged in'
+        options: |-
+          *.emerg                         :omusrmsg:*
+      - comment: 'Send selected logs to xconsole'
+        options: |-
+          daemon.*;mail.*;\
+                  news.err;\
+                  *.=debug;*.=info;\
+                  *.=notice;*.=warn       |/dev/xconsole
+        state: '{{ "present"
+                  if ("xconsole" in rsyslog__capabilities)
+                  else "absent" }}'
+
+

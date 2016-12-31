@@ -1,0 +1,5 @@
+---
+# Changes to default DebOps resources role for Turnkey Linux configuration
+
+resources__paths:
+  - { path: '/etc/motd', src: '/var/run/motd', state: 'link', force: 'yes' }

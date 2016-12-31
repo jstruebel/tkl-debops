@@ -1,0 +1,4 @@
+---
+
+# Disable Unattended Upgrades configuration to preserve default Turnkey Setup
+unattended_upgrades__enabled: False

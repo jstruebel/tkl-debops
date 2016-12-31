@@ -1,0 +1,74 @@
+---
+# Changes to default DebOps samba role for Turnkey Linux configuration
+
+samba__kernel_modules_load: False
+
+samba__path: '/srv'
+
+samba__passdb_backend: 'tdbsam'
+
+samba__default_global:
+
+  # Browsing / Identification.
+  workgroup: '{{ samba__workgroup }}'
+  netbios_name: '{{ samba__netbios_name }}'
+  server_string: '{{ samba__server_string }}'
+
+  # Authentication.
+  os_level: '20'
+  security: '{{ samba__security }}'
+  passdb_backend: '{{ samba__passdb_backend }}'
+  null_passwords: 'yes'
+  admin_users: 'root'
+  encrypt_passwords: 'true'
+  obey_pam_restrictions: 'yes'
+  pam_password_change: 'yes'
+  unix_password_sync: 'yes'
+  passwd_program: '/usr/bin/passwd %u'
+  passwd_chat: '*Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .'
+  add_user_script: "/user/sbin/useradd -m '%u' -g users -G users"
+  delete_user_script: "/user/sbin/userdel -r '%u'"
+  add_group_script: "/user/sbin/groupadd '%g'"
+  delete_group_script: "/user/sbin/groupdel '%g'"
+  add_user_to_group_script: "/user/sbin/usermod -G '%g' '%u'"
+  guest_account: 'nobody'
+
+  # Logs / Accounting.
+  syslog: '0'
+  log_file: '/var/log/samba/samba.log'
+  max_log_size: '1000'
+
+  # Networking / Connections.
+  wins_support: 'yes'
+  dns_proxy: 'no'
+  socket_options: 'TCP_NODELAY'
+  panic_action: '/usr/share/samba/panic-action %d'
+
+samba__homes_path: '/home'
+
+samba__default_homes:
+  comment: 'Home Directory'
+  browseable: 'no'
+  read_only: 'no'
+  valid_users: '%S'
+
+samba__shares_path: '{{ samba__path }}'
+
+samba__default_shares:
+
+  'cdrom':
+    comment: 'CD-ROM'
+    read_only: 'yes'
+    locking: 'no'
+    guest_ok: 'yes'
+    path: '/media/cdrom'
+    preexec: '/bin/mount /media/cdrom'
+    postexec: '/bin/umount /media/cdrom'
+
+  'storage':
+    comment: 'Public Share'
+    path: '{{ samba__shares_path }}/storage'
+    browseable: 'yes'
+    read_only: 'no'
+    create_mask: '0644'
+    directory_mask: '0755'

@@ -1,0 +1,4 @@
+---
+
+tkl__admin_email: "admin@{{ ansible_domain }}"
+

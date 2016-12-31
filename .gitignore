@@ -1,0 +1,50 @@
+ansible/secret
+secret
+.encfs.secret
+ansible.cfg
+
+#-- python
+*.py[co]
+
+#-- vim
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+#-- Emacs
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+#-- SublimeText
+*.sublime-workspace
+#*.sublime-project
+
+#-- sftp configuration file
+sftp-config.json
+
+#-- symlinks to debops-playbooks
+ansible/playbooks/env
+ansible/playbooks/sys.yml
+ansible/playbooks/env.yml
+ansible/playbooks/srv
+ansible/playbooks/srv.yml
+ansible/playbooks/common.yml
+ansible/playbooks/hw.yml
+ansible/playbooks/hw
+ansible/playbooks/virt
+ansible/playbooks/core.yml
+ansible/playbooks/virt.yml
+ansible/playbooks/app
+ansible/playbooks/app.yml
+ansible/playbooks/net
+ansible/playbooks/sys
+ansible/playbooks/net.yml
+ansible/playbooks/bootstrap.yml

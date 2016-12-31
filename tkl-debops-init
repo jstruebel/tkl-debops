@@ -1,0 +1,144 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+tkl-debops-init: Initialize project using debops-init.
+                 Will return error if project was already initialized or
+                 debops is not installed.
+"""
+# Copyright (C) 2016  Jonathan Struebel <jonathan.struebel@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import subprocess
+import os
+import sys
+
+DEBOPS_INIT = "debops-init"
+DEBOPS_CFG = ".debops.cfg"
+HOSTS_FILE = "ansible/inventory/hosts"
+DEBOPS_LINKS = ( 'app.yml', 'bootstrap.yml', 'common.yml', 'core.yml',
+                 'env.yml', 'hw.yml', 'net.yml', 'srv.yml', 'sys.yml',
+                 'virt.yml', 'app', 'env', 'hw', 'net', 'srv', 'sys',
+                 'virt',
+               )
+TKL_DEBOPS_CFG = "tkl-debops.cfg"
+
+def is_tool(name):
+    try:
+        devnull = open(os.devnull, "w")
+        subprocess.Popen([name], stdout=devnull, stderr=devnull).communicate()
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            return False
+    return True
+
+def find_playbookpath(config, project_root, playbook):
+    if project_root:
+        places = [os.path.join(project_root, "debops-playbooks", "playbooks")]
+    else:
+        places = []
+
+    places.extend(config['paths']['playbooks-paths'])
+    for playbook_path in places:
+        if os.path.exists(os.path.join(playbook_path, playbook)):
+            return playbook_path
+
+def symlink(source, link_name):
+    import os
+    os_symlink = getattr(os, "symlink", None)
+    if callable(os_symlink):
+        os_symlink(source, link_name)
+    else:
+        import ctypes
+        csl = ctypes.windll.kernel32.CreateSymbolicLinkW
+        csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
+        csl.restype = ctypes.c_ubyte
+        flags = 1 if os.path.isdir(source) else 0
+        if csl(link_name, source, flags) == 0:
+            raise ctypes.WinError()
+
+def create_playbook_links(playbooks_path):
+    for link in DEBOPS_LINKS:
+        link_dst = os.path.join("ansible", "playbooks", link)
+        if os.path.islink(link_dst):
+            os.remove(link_dst)
+        elif os.path.exists(link_dst):
+            continue
+
+        symlink(os.path.join(playbooks_path, link), link_dst)
+
+def read_local_config(config_path):
+    import ConfigParser
+    parser = ConfigParser.SafeConfigParser()
+    parser.read(config_path)
+    return parser
+
+def merge_configs(project_root):
+    config_file = os.path.join(project_root, DEBOPS_CFG)
+    config = read_local_config(config_file)
+    defaults = read_local_config(os.path.join(project_root, TKL_DEBOPS_CFG))
+
+    for sect in defaults.sections():
+        if not config.has_section(sect):
+            config.add_section(sect)
+
+        for opt in defaults.options(sect):
+            config.set(sect, opt, defaults.get(sect, opt))
+
+    with open(config_file, 'w') as cfgfile:
+        config.write(cfgfile)
+
+def main():
+    if not is_tool(DEBOPS_INIT):
+        print("debops tools are missing. Please install with 'sudo pip install debops'")
+        return 1;
+
+    import debops
+
+    project_root = debops.find_debops_project()
+    config = debops.read_config(project_root)
+
+    playbooks_path = find_playbookpath(config, project_root, "core.yml")
+
+    if playbooks_path is None:
+        print("debops-playbooks are missing, run 'debops-update'")
+        return 1;
+
+    print("Creating symlinks for DebOps playbooks ...")
+    create_playbook_links(playbooks_path)
+
+    if os.path.isfile(HOSTS_FILE) or os.path.isfile(DEBOPS_CFG):
+        print("debops project is already initialized")
+        return 1;
+
+    subprocess.call([DEBOPS_INIT, "."])
+
+    print("Customizing debops hosts inventory file ...")
+    with open(HOSTS_FILE, 'r') as file:
+        filedata = file.read()
+
+    filedata = filedata.replace('[debops_all_hosts]', '[tkl_core]')
+
+    with open(HOSTS_FILE, 'w') as file:
+        file.write(filedata)
+
+    print("Customizing debops config file ...")
+    project_root = debops.find_debops_project()
+    merge_configs(project_root)
+
+    return 0;
+
+if __name__ == '__main__':
+    sys.exit(main())
