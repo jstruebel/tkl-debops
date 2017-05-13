@@ -26,11 +26,11 @@ samba__default_global:
   unix_password_sync: 'yes'
   passwd_program: '/usr/bin/passwd %u'
   passwd_chat: '*Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .'
-  add_user_script: "/user/sbin/useradd -m '%u' -g users -G users"
-  delete_user_script: "/user/sbin/userdel -r '%u'"
-  add_group_script: "/user/sbin/groupadd '%g'"
-  delete_group_script: "/user/sbin/groupdel '%g'"
-  add_user_to_group_script: "/user/sbin/usermod -G '%g' '%u'"
+  add_user_script: "/usr/sbin/useradd -m '%u' -g users -G users"
+  delete_user_script: "/usr/sbin/userdel -r '%u'"
+  add_group_script: "/usr/sbin/groupadd '%g'"
+  delete_group_script: "/usr/sbin/groupdel '%g'"
+  add_user_to_group_script: "/usr/sbin/usermod -G '%g' '%u'"
   guest_account: 'nobody'
 
   # Logs / Accounting.

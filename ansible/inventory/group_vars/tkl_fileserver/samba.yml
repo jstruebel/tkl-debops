@@ -2,4 +2,4 @@
 # Changes to default DebOps samba role for Turnkey Linux configuration
 # See tkl_core/samba-common.yml for remaining changes
 
-samba__server_string: 'Turnkey FileServer'
+samba__server_string: 'TurnKey FileServer'
