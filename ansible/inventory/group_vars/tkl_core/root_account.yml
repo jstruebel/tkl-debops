@@ -1,0 +1,4 @@
+---
+
+# Disable root account configuration to preserve default Turnkey Setup
+root_account__enabled: False

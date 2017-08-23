@@ -40,7 +40,6 @@ ansible/playbooks/common.yml
 ansible/playbooks/hw.yml
 ansible/playbooks/hw
 ansible/playbooks/virt
-ansible/playbooks/core.yml
 ansible/playbooks/virt.yml
 ansible/playbooks/app
 ansible/playbooks/app.yml
@@ -48,3 +47,4 @@ ansible/playbooks/net
 ansible/playbooks/sys
 ansible/playbooks/net.yml
 ansible/playbooks/bootstrap.yml
+ansible/playbooks/service

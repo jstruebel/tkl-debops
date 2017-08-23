@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 tkl-debops-init: Initialize project using debops-init.
-                 Will return error if project was already initialized or
-                 debops is not installed.
+                 Will return error if debops is not installed.
 """
-# Copyright (C) 2016  Jonathan Struebel <jonathan.struebel@gmail.com>
+# Copyright (C) 2016-2017  Jonathan Struebel <jonathan.struebel@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,9 +27,9 @@ import sys
 DEBOPS_INIT = "debops-init"
 DEBOPS_CFG = ".debops.cfg"
 HOSTS_FILE = "ansible/inventory/hosts"
-DEBOPS_LINKS = ( 'app.yml', 'bootstrap.yml', 'common.yml', 'core.yml',
-                 'env.yml', 'hw.yml', 'net.yml', 'srv.yml', 'sys.yml',
-                 'virt.yml', 'app', 'env', 'hw', 'net', 'srv', 'sys',
+DEBOPS_LINKS = ( 'app.yml', 'bootstrap.yml', 'common.yml', 'env.yml',
+                 'hw.yml', 'net.yml', 'srv.yml', 'sys.yml', 'virt.yml',
+                 'app', 'env', 'hw', 'net', 'service', 'srv', 'sys',
                  'virt',
                )
 TKL_DEBOPS_CFG = "tkl-debops.cfg"
@@ -110,7 +109,7 @@ def main():
     project_root = debops.find_debops_project()
     config = debops.read_config(project_root)
 
-    playbooks_path = find_playbookpath(config, project_root, "core.yml")
+    playbooks_path = find_playbookpath(config, project_root, "common.yml")
 
     if playbooks_path is None:
         print("debops-playbooks are missing, run 'debops-update'")
@@ -121,7 +120,7 @@ def main():
 
     if os.path.isfile(HOSTS_FILE) or os.path.isfile(DEBOPS_CFG):
         print("debops project is already initialized")
-        return 1;
+        return 0;
 
     subprocess.call([DEBOPS_INIT, "."])
 

@@ -4,7 +4,6 @@
 # accesses this playbook; with command line arguments you can access
 # sub-playbooks separately for a lighter ansible-playbook run, if needed.
 
-
   # This playbook contains roles that are run on all hosts in the inventory
   # - common services like SMTP server, administrative tasks, authentication
   # and authorization control, system services used by other applications like
