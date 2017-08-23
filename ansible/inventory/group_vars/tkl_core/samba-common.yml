@@ -3,6 +3,8 @@
 
 samba__kernel_modules_load: False
 
+samba__service_name: 'smbd'
+
 samba__path: '/srv'
 
 samba__passdb_backend: 'tdbsam'

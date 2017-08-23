@@ -7,27 +7,6 @@ slapd_anonymous_bind: True
 
 slapd_snapshot: False
 
-slapd_pki: '{{ (ansible_local.pki.enabled
-                if (ansible_local|d() and ansible_local.pki|d() and
-                    ansible_local.pki.enabled|d())
-                else False) | bool }}'
-
-slapd_pki_path: '{{ (ansible_local.pki.base_path
-                     if (ansible_local|d() and ansible_local.pki|d() and
-                         ansible_local.pki.base_path|d())
-                     else "/etc/ldap") }}'
-
-slapd_pki_realm: '{{ (ansible_local.pki.realm
-                      if (ansible_local|d() and ansible_local.pki|d() and
-                          ansible_local.pki.realm|d())
-                      else "tls") }}'
-
-slapd_pki_ca: 'ca_cert.pem'
-
-slapd_pki_crt: 'openldap_crt.pem'
-
-slapd_pki_key: 'openldap_key.pem'
-
 slapd_pki_ciphers: 'normal'
 
 slapd_ldapscripts: True
@@ -76,83 +55,85 @@ slapd_machines_basedn: 'ou=Machines,{{ slapd_basedn }}'
 # BaseDN for samba machine accounts
 slapd_samba_machines_basedn: 'ou=Samba,{{ slapd_machines_basedn }}'
 
+tkl_slapd_acl_tls_ssf: "{{ slapd_acl_tls_ssf + ' ' if (slapd_acl_tls_ssf|d()) else ''}}"
+
 slapd_ldap_access_control_list_default: 
 
-  - |
+  - >-
     to dn.children="{{ slapd_idmaps_basedn }}"
     attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} anonymous auth
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}anonymous auth
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * none
 
-  - |
+  - >-
     to dn.subtree="{{ slapd_idmaps_basedn }}"
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * read
 
-  - |
+  - >-
     to dn.children="{{ slapd_hosts_basedn }}"
     attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} anonymous auth
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}anonymous auth
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * none
 
-  - |
+  - >-
     to dn.subtree="{{ slapd_hosts_basedn }}"
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * read
 
-  - |
+  - >-
     to dn.children="{{ slapd_users_basedn }}"
     attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} anonymous auth
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_services_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}anonymous auth
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_services_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * none
 
-  - |
+  - >-
     to dn.children="{{ slapd_users_basedn }}"
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * read
 
-  - |
+  - >-
     to filter=(objectClass=sambaDomain)
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * read
 
-  - |
+  - >-
     to dn.base="{{ slapd_basedn }}" attrs=children
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_samba_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_samba_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * read
 
-  - |
+  - >-
     to attrs=userPassword,shadowLastChange,SambaLMPassword,SambaNTPassword
-    by {{ slapd_acl_tls_ssf }} self write
-    by {{ slapd_acl_tls_ssf }} anonymous auth
-    by {{ slapd_acl_tls_ssf }} dn.subtree="{{ slapd_machines_basedn }}" write
-    by {{ slapd_acl_tls_ssf }} dn="{{ slapd_basedn_admin }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}self write
+    by {{ tkl_slapd_acl_tls_ssf }}anonymous auth
+    by {{ tkl_slapd_acl_tls_ssf }}dn.subtree="{{ slapd_machines_basedn }}" write
+    by {{ tkl_slapd_acl_tls_ssf }}dn="{{ slapd_basedn_admin }}" write
     by * none
 
-  - |
+  - >-
     to dn.base=""
-    by {{ slapd_acl_tls_ssf }} * read
+    by {{ tkl_slapd_acl_tls_ssf }}* read
 
-  - |
+  - >-
     to *
-    by {{ slapd_acl_tls_ssf }} * read
+    by {{ tkl_slapd_acl_tls_ssf }}* read
