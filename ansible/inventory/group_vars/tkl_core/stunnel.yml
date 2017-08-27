@@ -15,6 +15,3 @@ stunnel_ssl_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA38
 
 stunnel_ssl_verify: '0'
 
-stunnel_options: |
-  cert = {{ stunnel_pki_path }}/{{ stunnel_pki_realm }}/{{ stunnel_pki_crt }}
-
