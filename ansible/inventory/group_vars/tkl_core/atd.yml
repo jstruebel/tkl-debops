@@ -1,4 +1,4 @@
 ---
 
 # Disable atd configuration to preserve default Turnkey Setup
-atd_enabled: False
+atd_enabled: '{{ True if "tkl_mediaserver" in group_names else False }}'
