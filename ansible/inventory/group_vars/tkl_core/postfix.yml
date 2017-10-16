@@ -1,39 +1,55 @@
 ---
 # Changes to default DebOps postfix role for Turnkey Linux configuration
 
-postfix: [ 'local' ]
+postfix__smtpd_banner: '$myhostname ESMTP $mail_name (Debian/GNU)'
 
-postfix_smtpd_banner: '$myhostname ESMTP $mail_name (Debian/GNU)'
+postfix__maincf:
+  - name: 'disable_vrfy_command'
+    value: False
+    section: 'restrictions'
 
-postfix_delay_warning_time: '0h'
+  - name: 'enable_long_queue_ids'
+    value: False
+    section: 'base'
+    state: 'present'
 
-postfix_long_queue_ids: 'no'
+  - name: 'inet_interfaces'
+    value: 'localhost'
+    section: 'base'
 
-postfix_message_size_limit: 9.765625
+  - name: 'strict_rfc821_envelopes'
+    value: False
+    section: 'restrictions'
 
-postfix_disable_vrfy_command: 'no'
+  - name: 'smtpd_helo_required'
+    value: False
+    section: 'restrictions'
 
-postfix_strict_rfc821_envelopes: 'no'
+  - name: 'smtpd_reject_unlisted_sender'
+    value: False
+    section: 'restrictions'
 
-postfix_smtpd_helo_required: 'no'
+  - name: 'smtpd_client_restrictions'
+    value: ''
+    section: 'restrictions'
+    state: 'absent'
 
-postfix_smtpd_reject_unlisted_sender: 'no'
+  - name: 'smtpd_data_restrictions'
+    section: 'restrictions'
+    weight: 60
+    value: ''
 
-postfix_dependencies: False
+  - name: 'smtpd_helo_restrictions'
+    section: 'restrictions'
+    weight: 20
+    value: ''
 
-postfix_local_mastercf: |
-  maildrop  unix  -       n       n       -       -       pipe
-    flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}
-  ifmail    unix  -       n       n       -       -       pipe
-    flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
-  bsmtp     unix  -       n       n       -       -       pipe
-    flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient
-  scalemail-backend unix	-	n	n	-	2	pipe
-    flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}
-  mailman   unix  -       n       n       -       -       pipe
-    flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
-    ${nexthop} ${user}
+  - name: 'smtpd_recipient_restrictions'
+    section: 'restrictions'
+    weight: 50
+    value: ''
 
-postfix_local_maincf: |
-  readme_directory = no
-
+  - name: 'smtpd_sender_restrictions'
+    section: 'restrictions'
+    weight: 30
+    value: ''
