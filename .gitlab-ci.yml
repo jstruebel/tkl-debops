@@ -1,0 +1,30 @@
+.job_template: &job_definition
+  stage: test
+  script:
+    - cd ..
+    - rm -fr tkl-debops-test
+    - git clone $TKL_DEBOPS_TEST_REPO
+    - cd tkl-debops-test
+    - ln -s $CI_PROJECT_PATH tkl-debops
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - ansible-playbook playbooks/setup.yml
+    - echo -e "cat > ansible/inventory/hosts <<EOF\nlxc-host $LXC_HOST_OPTS\n\n[lxc_hosts]\nlxc-host\nEOF" | bash
+    - ./test_app $APP_NAME $APP_PORT test
+
+stages:
+  - test
+  - publish
+
+test_core:
+  <<: *job_definition
+  variables:
+    APP_NAME: "core"
+    APP_PORT: "2222"
+
+test_fileserver:
+  <<: *job_definition
+  variables:
+    APP_NAME: "fileserver"
+    APP_PORT: "2223"
