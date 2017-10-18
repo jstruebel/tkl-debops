@@ -4,8 +4,10 @@
     - cd ..
     - rm -fr tkl-debops-test
     - git clone $TKL_DEBOPS_TEST_REPO
+    - ls -la
     - cd tkl-debops-test
     - ln -s $CI_PROJECT_PATH tkl-debops
+    - ls -la
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - touch ~/.ssh/known_hosts
