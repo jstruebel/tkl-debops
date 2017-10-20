@@ -28,3 +28,9 @@ test_fileserver:
   variables:
     APP_NAME: "fileserver"
     APP_PORT: "2223"
+
+test_mediaserver:
+  <<: *job_definition
+  variables:
+    APP_NAME: "mediaserver"
+    APP_PORT: "2224"
