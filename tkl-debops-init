@@ -109,7 +109,15 @@ def main():
     project_root = debops.find_debops_project()
     config = debops.read_config(project_root)
 
-    playbooks_path = find_playbookpath(config, project_root, "common.yml")
+    try:
+      monorepo_path = debops.find_monorepopath(config, project_root)
+    except AttributeError:
+      monorepo_path = None
+
+    if monorepo_path is None:
+      playbooks_path = find_playbookpath(config, project_root, "common.yml")
+    else:
+      playbooks_path = os.path.join(monorepo_path, "ansible", "playbooks")
 
     if playbooks_path is None:
         print("debops-playbooks are missing, run 'debops-update'")
