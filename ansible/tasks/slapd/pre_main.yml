@@ -1,0 +1,17 @@
+---
+
+- name: Check if TLS Certificate is configured
+  shell: ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b cn=config -s base 'olcTLSCertificateFile=*' olcTLSCertificateFile
+  register: slapd_register_pre_tls_cert_search
+  changed_when: False
+
+- name: Remove current TLS Certificate Configuration
+  shell:
+    cmd: |
+      ldapmodify -Y EXTERNAL -H ldapi:/// <<EOF
+      dn: cn=config
+      delete: olcTLSCertificateFile
+      -
+      delete: olcTLSCertificateKeyFile
+      EOF
+  when: slapd_pki|d() and slapd_pki | bool and not (slapd_register_pre_tls_cert_search.stdout | search("olcTLSCertificateFile:" + " " + slapd_pki_path + "/" + slapd_pki_realm + "/" + slapd_pki_crt))
