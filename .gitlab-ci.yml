@@ -34,3 +34,9 @@ test_mediaserver:
   variables:
     APP_NAME: "mediaserver"
     APP_PORT: "2224"
+
+test_openldap:
+  <<: *job_definition
+  variables:
+    APP_NAME: "openldap"
+    APP_PORT: "2224"
