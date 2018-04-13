@@ -40,3 +40,15 @@ test_openldap:
   variables:
     APP_NAME: "openldap"
     APP_PORT: "2224"
+
+publish_github:
+  stage: publish
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "host github.com\n  HostName github.com\n  IdentityFile /ssh/id_rsa" > ~/.ssh/config
+    - touch ~/.ssh/known_hosts
+    - ssh-keyscan -H github.com > ~/.ssh/known_hosts
+    - git remote add github git@github.com:jstruebel/tkl-debops.git
+    - git fetch github
+    - git push github "$CI_BUILD_REF_NAME" -f
