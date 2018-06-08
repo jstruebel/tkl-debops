@@ -1,0 +1,7 @@
+---
+
+- name: Ensure stunnel is running
+  service:
+    name: 'stunnel4'
+    state: 'started'
+

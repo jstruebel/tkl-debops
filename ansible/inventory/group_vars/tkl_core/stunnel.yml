@@ -5,9 +5,17 @@ stunnel_services:
   - name: 'shellinabox'
     server_accept: '12320'
     server_connect: '127.0.0.1:12319'
+    type: 'accept'
+    dport: [ '12320' ]
+    protocol: 'tcp'
+    daemon: 'shellinabox'
   - name: 'webmin'
     server_accept: '12321'
     server_connect: '127.0.0.1:10000'
+    type: 'accept'
+    dport: [ '12321' ]
+    protocol: 'tcp'
+    daemon: 'webmin'
   - name: 'stunnel'
     delete: True
 
