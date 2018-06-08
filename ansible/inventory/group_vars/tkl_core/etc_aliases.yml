@@ -1,0 +1,66 @@
+---
+
+etc_aliases__rfc2142_compliant: False
+
+etc_aliases__admin_private_email: '{{ ansible_local.core.admin_private_email
+                                      if (ansible_local|d() and ansible_local.core|d() and
+                                          ansible_local.core.admin_private_email)
+                                      else (tkl__admin_email if tkl__admin_email|d()
+                                      else ("root@" + etc_aliases__domain)) }}'
+
+etc_aliases__recipients:
+  - name: 'monit'
+    dest: 'root'
+    section: 'admin'
+
+  - name: 'admin'
+    dest: 'root'
+    section: 'admin'
+    weight: -8
+    state: 'absent'
+
+  - name: 'hostmaster'
+    dest: 'root'
+    section: 'admin'
+    weight: -8
+    state: 'absent'
+
+  - name: 'operator'
+    dest: 'root'
+    section: 'admin'
+    weight: -8
+    state: 'absent'
+
+  - name: 'backup'
+    dest: 'root'
+    section: 'admin'
+    weight: -5
+    state: 'absent'
+
+  - name: 'monitoring'
+    dest: 'root'
+    section: 'admin'
+    weight: -5
+    state: 'absent'
+
+  - name: 'staff'
+    dest: 'root'
+    section: 'admin'
+    state: 'absent'
+
+  - name: 'MAILER-DAEMON'
+    dest: 'postmaster'
+    section: 'system'
+    state: 'absent'
+
+  - name: 'noreply'
+    dest: 'devnull'
+    section: 'system'
+    weight: 10
+    state: 'absent'
+
+  - name: 'devnull'
+    dest: '/dev/null'
+    section: 'system'
+    weight: 20
+    state: 'absent'
