@@ -27,9 +27,9 @@ import sys
 DEBOPS_INIT = "debops-init"
 DEBOPS_CFG = ".debops.cfg"
 HOSTS_FILE = "ansible/inventory/hosts"
-DEBOPS_LINKS = ( 'app.yml', 'bootstrap.yml', 'common.yml', 'env.yml',
+DEBOPS_LINKS = ( 'app.yml', 'agent.yml', 'bootstrap.yml', 'common.yml', 'env.yml',
                  'hw.yml', 'net.yml', 'srv.yml', 'sys.yml', 'virt.yml',
-                 'app', 'env', 'hw', 'net', 'service', 'srv', 'sys',
+                 'app', 'agent', 'env', 'hw', 'net', 'service', 'srv', 'sys',
                  'virt',
                )
 TKL_DEBOPS_CFG = "tkl-debops.cfg"

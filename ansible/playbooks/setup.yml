@@ -8,9 +8,9 @@
     apt_pkgs:
       - 'python-pip'
     pip_pkgs:
-      - { name: 'ansible', version: '2.3' }
+      - { name: 'ansible', version: '2.4' }
       - { name: 'jinja2', version: '2.8.1' }
-      - { name: 'debops', version: '0.4.4' }
+      - { name: 'debops', version: '0.7.2' }
     init_script_dir: '{{ playbook_dir }}/../../'
     init_script: 'tkl-debops-init'
 
