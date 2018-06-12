@@ -1,6 +1,5 @@
-.job_template: &job_definition
-  stage: test
-  script:
+.before_template:
+  before_script: &before_definition
     - cd ..
     - rm -fr tkl-debops-test
     - git clone $TKL_DEBOPS_TEST_REPO
@@ -11,10 +10,21 @@
     - touch ~/.ssh/known_hosts
     - ansible-playbook playbooks/setup.yml
     - echo -e "cat > ansible/inventory/hosts <<EOF\nlxc-host $LXC_HOST_OPTS\n\n[lxc_hosts]\nlxc-host\nEOF" | bash
+
+.job_template: &job_definition
+  stage: test
+  before_script: *before_definition
+  script:
     - ./test_app $APP_NAME $APP_PORT test
+  artifacts:
+    paths:
+      - ansible/inventory/inv_${APP_NAME}_${APP_PORT}
+    expire_in: 1 day
+    when: on_failure
 
 stages:
   - test
+  - cleanup_test
   - publish
 
 test_core:
@@ -39,7 +49,16 @@ test_openldap:
   <<: *job_definition
   variables:
     APP_NAME: "openldap"
-    APP_PORT: "2224"
+    APP_PORT: "2225"
+
+cleanup_test_failure:
+  stage: cleanup_test
+  before_script: *before_definition
+  script:
+    - ls -l ansible/inventory
+    - (files=$(find ansible/inventory/ -maxdepth 1 -type f -name inv_*); for file in $files; do app=$(echo $file | cut -d'_' -f2 | sed -e 's/_//g'); port=$(echo $file | cut -d'_' -f3 | sed -e 's/_//g'); echo Cleaning up $app on $port; ./test_app $app $port stop; done);
+    - ls -l ansible/inventory
+  when: on_failure
 
 publish_github:
   stage: publish
