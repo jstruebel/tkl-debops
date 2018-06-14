@@ -7,7 +7,9 @@
     - ln -s $CI_PROJECT_DIR tkl-debops
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - touch ~/.ssh/known_hosts
+    - echo "$LXC_SSH_KEY" > ~/.ssh/id_rsa
+    - ssh-keyscan -H $LXC_HOST > ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/*
     - ansible-playbook playbooks/setup.yml
     - echo -e "cat > ansible/inventory/hosts <<EOF\nlxc-host $LXC_HOST_OPTS\n\n[lxc_hosts]\nlxc-host\nEOF" | bash
 
