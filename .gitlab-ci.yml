@@ -65,10 +65,12 @@ publish_github:
   script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo "host github.com\n  HostName github.com\n  IdentityFile /ssh/id_rsa" > ~/.ssh/config
-    - chmod 600 ~/.ssh/config
-    - touch ~/.ssh/known_hosts
+    - echo "$GITHUB_SSH_KEY" > ~/.ssh/id_rsa
     - ssh-keyscan -H github.com > ~/.ssh/known_hosts
-    - git remote add github git@github.com:jstruebel/tkl-debops.git
+    - chmod 600 ~/.ssh/*
+    - git remote add github git@github.com:$GITHUB_PATH
     - git fetch github
     - git push github "$CI_BUILD_REF_NAME" -f
+  when: manual
+  variables:
+    GIT_STRATEGY: clone
