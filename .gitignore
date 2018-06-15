@@ -48,3 +48,5 @@ ansible/playbooks/sys
 ansible/playbooks/net.yml
 ansible/playbooks/bootstrap.yml
 ansible/playbooks/service
+ansible/playbooks/agent
+ansible/playbooks/agent.yml
